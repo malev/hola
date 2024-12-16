@@ -1,0 +1,21 @@
+### Get all users
+GET https://api.malev.xyz/api/users
+
+### Create a new user
+POST https://api.malev.xyz/api/users
+X-API-KEY: {{env|X_API_KEY}}
+X-API-SECRET: {{env|X_API_SECRET}}
+
+{
+  "username": "malev",
+  "email": "malev@lol.com"
+}
+
+### Unauthorized update
+POST https://api.malev.xyz/api/users
+
+{
+  "username": "malev",
+  "email": "malev@lol.com"
+}
+
