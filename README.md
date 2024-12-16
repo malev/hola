@@ -10,10 +10,10 @@ Every time I try to send a cURL request, I have to open a text editor, construct
 
 ## Usage
 
-### Setup a file with your requests. For example:
+### Setup a file with your requests
 
-
-```users.http
+users.http:
+```
 ### Get all users
 GET https://api.malev.xyz/api/users
 
@@ -29,8 +29,8 @@ X-API-SECRET: {{env|X_API_SECRET}}
 ```
 
 * Export your secrets:
-  * `export X_API_KEY=wQ6YUNcA1ozA9FQev`
-  * `export X_API_SECRET=f648a63d4235c6924cd44002d4bccc1b`
+  * `export X_API_KEY=THIS-IS-MY-KEY`
+  * `export X_API_SECRET=GIMME-ACCESS`
 * `hola users.http --index 0` to send the GET request
 * `hola users.http --index 1` to send the POST request (2nd request in the file)
 
