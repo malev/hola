@@ -36,16 +36,18 @@ X-API-SECRET: {{env|X_API_SECRET}}
 
 ### Make use of configuration files
 
-```config.json
+config.json:
+```
 {
   "host": "api.malev.xyz"
 }
 ```
 
-```users.http
+users.http
+```
 ### Get all users
 GET https://{{host}}/api/users
 ```
 
-Run it with: `hola users.http --config config.json`
+* `hola users.http --config config.json`
 
