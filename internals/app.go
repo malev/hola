@@ -38,7 +38,7 @@ func NewApp(dryRun bool, index int, verbose bool) *App {
 
 func (app *App) LoadConfiguration(configFile string) error {
 	if !FileExists(configFile) {
-		slog.Debug(fmt.Sprintf("%s doesn't exist.\n", configFile))
+		slog.Debug(fmt.Sprintf("%s doesn't exist.", configFile))
 		return nil
 	}
 
@@ -87,6 +87,10 @@ func (app *App) LoadRequests(filename string) error {
 func (app *App) Send(index int) error {
 	request := app.Requests[index]
 
+	if app.AppConfig.Verbose {
+		slog.Info(request.ToString())
+	}
+
 	req, err := http.NewRequest(
 		request.Method,
 		request.URL,
@@ -113,13 +117,14 @@ func (app *App) Send(index int) error {
 	body, err := io.ReadAll(resp.Body)
 
 	if app.AppConfig.Verbose {
-		fmt.Printf("It took: %s\n", elapsed)
-		fmt.Printf("Status: %s\n", resp.Status)
+		slog.Info(fmt.Sprintf("* Time to response: %s", elapsed))
+		slog.Info(fmt.Sprintf("* %s %s", resp.Proto, resp.Status))
 		for header, values := range resp.Header {
 			for _, value := range values {
-				fmt.Printf("%s: %s\n", header, value)
+				fmt.Printf("> %s: %s\n", header, value)
 			}
 		}
+		slog.Info("")
 	}
 
 	if err != nil {

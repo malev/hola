@@ -20,12 +20,12 @@ type Request struct {
 }
 
 func (r *Request) ToString() string {
-	output := strings.TrimSpace(fmt.Sprintf("%s %s %s\n", r.Method, r.URL, r.HttpVersion))
+	output := strings.TrimSpace(fmt.Sprintf("> %s %s %s\n", r.Method, r.URL, r.HttpVersion))
 
 	headers := "\n"
 	if len(r.Headers) > 0 {
 		for _, header := range r.Headers {
-			headers += fmt.Sprintf("%s: %s\n", header.Key, header.Value)
+			headers += fmt.Sprintf("> %s: %s\n", header.Key, header.Value)
 		}
 	}
 
