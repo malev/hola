@@ -84,12 +84,35 @@ func (app *App) LoadRequests(filename string) error {
 	return nil
 }
 
-func (app *App) Send(index int) error {
+func (app *App) printRequest(index int) {
 	request := app.Requests[index]
-
 	if app.AppConfig.Verbose {
 		slog.Info(request.ToString())
 	}
+}
+
+func (app App) printResponseInfo(resp *http.Response, elapsed time.Duration) {
+	if app.AppConfig.Verbose {
+		slog.Info(fmt.Sprintf("* Time to response: %s", elapsed))
+		slog.Info(fmt.Sprintf("* %s %s", resp.Proto, resp.Status))
+	}
+}
+
+func (app *App) printHeaders(headers http.Header) {
+	if app.AppConfig.Verbose {
+		for header, values := range headers {
+			for _, value := range values {
+				fmt.Printf("> %s: %s\n", header, value)
+			}
+		}
+		slog.Info("")
+	}
+}
+
+func (app *App) Send(index int) error {
+	request := app.Requests[index]
+
+	app.printRequest(index)
 
 	req, err := http.NewRequest(
 		request.Method,
@@ -109,24 +132,15 @@ func (app *App) Send(index int) error {
 	resp, err := client.Do(req)
 	elapsed := time.Since(start)
 
+	app.printResponseInfo(resp, elapsed)
+	app.printHeaders(resp.Header)
+
 	if err != nil {
 		return fmt.Errorf("Error sending request %v", err)
 	}
 
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
-
-	if app.AppConfig.Verbose {
-		slog.Info(fmt.Sprintf("* Time to response: %s", elapsed))
-		slog.Info(fmt.Sprintf("* %s %s", resp.Proto, resp.Status))
-		for header, values := range resp.Header {
-			for _, value := range values {
-				fmt.Printf("> %s: %s\n", header, value)
-			}
-		}
-		slog.Info("")
-	}
-
 	if err != nil {
 		return fmt.Errorf("Error reading body %v", err)
 	}
