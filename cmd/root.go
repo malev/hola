@@ -46,6 +46,12 @@ to manage your secrets such as api-keys, api-secrets, etc.
 			os.Exit(1)
 		}
 
+		maxTimeout, err := cmd.Flags().GetInt("max-timeout")
+		if err != nil {
+			fmt.Println("Error parsing --max-timeout")
+			os.Exit(1)
+		}
+
 		verbose, err := cmd.Flags().GetBool("verbose")
 		if err != nil {
 			fmt.Println("Error parsing --verbose")
@@ -58,7 +64,7 @@ to manage your secrets such as api-keys, api-secrets, etc.
 			os.Exit(1)
 		}
 
-		app := internals.NewApp(dryRun, index, verbose)
+		app := internals.NewApp(dryRun, index, verbose, maxTimeout)
 		err = app.LoadConfiguration(configFile)
 		if err != nil {
 			slog.Error(err.Error())
@@ -100,6 +106,8 @@ func Execute() {
 func init() {
 	rootCmd.Flags().StringP("config", "c", "config.json", "Configuration file")
 	rootCmd.Flags().IntP("index", "", 0, "Index of the request to send")
+	rootCmd.Flags().
+		IntP("max-timeout", "", 0, "Maximum  time  in  seconds that you allow the whole operation to take")
 	rootCmd.Flags().BoolP("debug", "d", false, "Enable debug mode")
 	rootCmd.Flags().BoolP("dry-run", "", false, "Prevent sending the request")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")

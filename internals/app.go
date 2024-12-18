@@ -12,9 +12,10 @@ import (
 )
 
 type AppConfig struct {
-	DryRun  bool
-	Index   int
-	Verbose bool
+	DryRun     bool
+	Index      int
+	Verbose    bool
+	MaxTimeout int
 }
 
 type App struct {
@@ -24,11 +25,12 @@ type App struct {
 	Requests  []*Request
 }
 
-func NewApp(dryRun bool, index int, verbose bool) *App {
+func NewApp(dryRun bool, index int, verbose bool, maxTimeout int) *App {
 	appConfig := &AppConfig{
-		DryRun:  dryRun,
-		Index:   index,
-		Verbose: verbose,
+		DryRun:     dryRun,
+		Index:      index,
+		Verbose:    verbose,
+		MaxTimeout: maxTimeout,
 	}
 
 	return &App{
@@ -128,6 +130,12 @@ func (app *App) Send(index int) error {
 	}
 
 	client := &http.Client{}
+	if app.AppConfig.MaxTimeout > 0 {
+		client = &http.Client{
+			Timeout: time.Second * time.Duration(app.AppConfig.MaxTimeout),
+		}
+	}
+
 	start := time.Now()
 	resp, err := client.Do(req)
 	elapsed := time.Since(start)
