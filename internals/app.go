@@ -23,9 +23,10 @@ type App struct {
 	Config    string
 	Compiled  string
 	Requests  []*Request
+	Printer   Printer
 }
 
-func NewApp(dryRun bool, index int, verbose bool, maxTimeout int) *App {
+func NewApp(dryRun bool, index int, verbose bool, maxTimeout int, output string) *App {
 	appConfig := &AppConfig{
 		DryRun:     dryRun,
 		Index:      index,
@@ -33,8 +34,16 @@ func NewApp(dryRun bool, index int, verbose bool, maxTimeout int) *App {
 		MaxTimeout: maxTimeout,
 	}
 
+	var printer Printer
+	if output == "json" {
+		printer = JSONPrinter{}
+	} else {
+		printer = TextPrinter{verbose: verbose}
+	}
+
 	return &App{
 		AppConfig: appConfig,
+		Printer:   printer,
 	}
 }
 
@@ -140,8 +149,8 @@ func (app *App) Send(index int) error {
 	resp, err := client.Do(req)
 	elapsed := time.Since(start)
 
-	app.printResponseInfo(resp, elapsed)
-	app.printHeaders(resp.Header)
+	app.Printer.Meta(resp, elapsed)
+	app.Printer.Headers(resp.Header)
 
 	if err != nil {
 		return fmt.Errorf("Error sending request %v", err)
@@ -153,6 +162,6 @@ func (app *App) Send(index int) error {
 		return fmt.Errorf("Error reading body %v", err)
 	}
 
-	fmt.Println(string(body))
+	app.Printer.Body(body)
 	return nil
 }

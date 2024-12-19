@@ -48,7 +48,7 @@ to quickly create a Cobra application.`,
 			os.Exit(1)
 		}
 
-		app := internals.NewApp(false, 0, false, 0)
+		app := internals.NewApp(false, 0, false, 0, "text")
 		err = app.LoadConfiguration(configFile)
 		if err != nil {
 			slog.Error(err.Error())
