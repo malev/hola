@@ -86,7 +86,7 @@ to manage your secrets such as api-keys, api-secrets, etc.
 		}
 
 		if args[0] == "-" {
-			err = app.LoadRequests(input)
+			err = app.LoadRequest(input)
 		} else {
 			err = app.LoadRequests(args[0])
 		}

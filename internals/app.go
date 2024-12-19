@@ -62,6 +62,26 @@ func (app *App) LoadConfiguration(configFile string) error {
 	return nil
 }
 
+func (app *App) LoadRequest(raw string) error {
+	var err error
+	raw = strings.TrimSpace(raw)
+
+	compiler := NewCompiler(raw, app.Config)
+	app.Compiled = compiler.Run()
+
+	for _, warning := range compiler.Warnings {
+		slog.Debug(warning)
+	}
+
+	parser := NewParser(app.Compiled)
+	app.Requests, err = parser.Parse()
+	if err != nil {
+		return fmt.Errorf("Failed parsing requests %v", err)
+	}
+
+	return nil
+}
+
 func (app *App) LoadRequests(filename string) error {
 	if filename == "-" {
 		slog.Debug("Loading requests from STDIN is not supported yet")
@@ -69,7 +89,7 @@ func (app *App) LoadRequests(filename string) error {
 	}
 
 	if !FileExists(filename) {
-		return fmt.Errorf("%s doesn't exist", filename)
+		return fmt.Errorf("File %s doesn't exist", filename)
 	}
 
 	stream, err := os.ReadFile(filename)
