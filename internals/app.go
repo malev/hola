@@ -124,24 +124,6 @@ func (app *App) printRequest(index int) {
 	}
 }
 
-func (app App) printResponseInfo(resp *http.Response, elapsed time.Duration) {
-	if app.AppConfig.Verbose {
-		slog.Info(fmt.Sprintf("* Time to response: %s", elapsed))
-		slog.Info(fmt.Sprintf("* %s %s", resp.Proto, resp.Status))
-	}
-}
-
-func (app *App) printHeaders(headers http.Header) {
-	if app.AppConfig.Verbose {
-		for header, values := range headers {
-			for _, value := range values {
-				fmt.Printf("> %s: %s\n", header, value)
-			}
-		}
-		slog.Info("")
-	}
-}
-
 func (app *App) Send(index int) error {
 	request := app.Requests[index]
 
