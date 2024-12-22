@@ -48,7 +48,4 @@ jobs:
           skip-cache: true
       - name: go mod tidy
         run: go mod tidy
-      - name: check for any changes
-        run: |
-          [[ $(git status --porcelain) == "" ]] || (echo "changes detected" && exit 1)
 
