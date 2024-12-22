@@ -64,8 +64,11 @@ func (app *App) LoadConfiguration(configFile string) error {
 	return nil
 }
 
-func (app *App) LoadRequest(input string) error {
-	compiler := NewCompiler(input, app.Config)
+func (app *App) LoadRequest(raw string) error {
+	var err error
+	raw = strings.TrimSpace(raw)
+
+	compiler := NewCompiler(raw, app.Config)
 	app.Compiled = compiler.Run()
 
 	for _, warning := range compiler.Warnings {
@@ -73,10 +76,9 @@ func (app *App) LoadRequest(input string) error {
 	}
 
 	parser := NewParser(app.Compiled)
-	var err error
 	app.Requests, err = parser.Parse()
 	if err != nil {
-		return fmt.Errorf("Failed parsing request %v", err)
+		return fmt.Errorf("Failed parsing requests %v", err)
 	}
 
 	return nil
@@ -89,7 +91,7 @@ func (app *App) LoadRequests(filename string) error {
 	}
 
 	if !FileExists(filename) {
-		return fmt.Errorf("%s doesn't exist", filename)
+		return fmt.Errorf("File %s doesn't exist", filename)
 	}
 
 	stream, err := os.ReadFile(filename)
