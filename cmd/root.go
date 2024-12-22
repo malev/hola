@@ -14,6 +14,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const VERSION = "v0.0.3"
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "hola <requests.http>",
@@ -25,12 +27,17 @@ to manage your secrets such as api-keys, api-secrets, etc.
   hola requests.http --number 1 --verbose
   hola requests.http --number 1 --dry-run
 	`,
-	Args: cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
-			return
+			return fmt.Errorf("Missing .http files")
 		}
-
+		if len(args) > 1 {
+			return fmt.Errorf("hola takes only one .http file")
+		}
+		return nil
+	},
+	Version: VERSION,
+	Run: func(cmd *cobra.Command, args []string) {
 		configFile, err := cmd.Flags().GetString("config")
 		if err != nil {
 			slog.Error("Error parsing --config")
@@ -143,4 +150,5 @@ func init() {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.Flags().BoolP("verbose", "v", false, "Set output to verbose")
 	rootCmd.Flags().StringP("output", "o", "text", "Change the output")
+	rootCmd.Flags().BoolP("version", "", false, "Print hola's version")
 }
