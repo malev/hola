@@ -13,7 +13,8 @@ import (
 
 type AppConfig struct {
 	DryRun     bool
-	Index      int
+	Number     int
+	Line       int
 	Verbose    bool
 	MaxTimeout int
 }
@@ -26,10 +27,11 @@ type App struct {
 	Printer   Printer
 }
 
-func NewApp(dryRun bool, index int, verbose bool, maxTimeout int, output string) *App {
+func NewApp(dryRun bool, number int, line int, verbose bool, maxTimeout int, output string) *App {
 	appConfig := &AppConfig{
 		DryRun:     dryRun,
-		Index:      index,
+		Number:     number,
+		Line:       number,
 		Verbose:    verbose,
 		MaxTimeout: maxTimeout,
 	}
@@ -59,6 +61,24 @@ func (app *App) LoadConfiguration(configFile string) error {
 	}
 
 	app.Config = strings.TrimSpace(string(stream))
+	return nil
+}
+
+func (app *App) LoadRequest(input string) error {
+	compiler := NewCompiler(input, app.Config)
+	app.Compiled = compiler.Run()
+
+	for _, warning := range compiler.Warnings {
+		slog.Debug(warning)
+	}
+
+	parser := NewParser(app.Compiled)
+	var err error
+	app.Requests, err = parser.Parse()
+	if err != nil {
+		return fmt.Errorf("Failed parsing request %v", err)
+	}
+
 	return nil
 }
 

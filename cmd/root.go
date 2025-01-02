@@ -20,9 +20,9 @@ var rootCmd = &cobra.Command{
 	Long: `hola is an HTTP Client that uses .http files and supports templating
 to manage your secrets such as api-keys, api-secrets, etc.
 
-  hola requests.http --index 0
-  hola requests.http --index 1 --verbose
-  hola requests.http --index 1 --dry-run
+  hola requests.http --number 0
+  hola requests.http --number 1 --verbose
+  hola requests.http --number 1 --dry-run
 	`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -42,9 +42,19 @@ to manage your secrets such as api-keys, api-secrets, etc.
 			os.Exit(1)
 		}
 
-		index, err := cmd.Flags().GetInt("index")
+		line, err := cmd.Flags().GetInt("line")
 		if err != nil {
-			fmt.Println("Error parsing --index")
+			fmt.Println("Error parsing --line")
+			os.Exit(1)
+		}
+
+		if line != 0 {
+			panic("line not implemented")
+		}
+
+		number, err := cmd.Flags().GetInt("number")
+		if err != nil {
+			fmt.Println("Error parsing --number")
 			os.Exit(1)
 		}
 
@@ -78,7 +88,7 @@ to manage your secrets such as api-keys, api-secrets, etc.
 			input = string(data)
 		}
 
-		app := internals.NewApp(dryRun, index, verbose, maxTimeout, output)
+		app := internals.NewApp(dryRun, number, line, verbose, maxTimeout, output)
 		err = app.LoadConfiguration(configFile)
 		if err != nil {
 			slog.Error(err.Error())
@@ -86,7 +96,7 @@ to manage your secrets such as api-keys, api-secrets, etc.
 		}
 
 		if args[0] == "-" {
-			err = app.LoadRequests(input)
+			err = app.LoadRequest(input)
 		} else {
 			err = app.LoadRequests(args[0])
 		}
@@ -95,7 +105,7 @@ to manage your secrets such as api-keys, api-secrets, etc.
 			os.Exit(1)
 		}
 
-		err = app.Send(index)
+		err = app.Send(number)
 		if err != nil {
 			slog.Error(err.Error())
 			os.Exit(1)
@@ -123,7 +133,8 @@ func Execute() {
 
 func init() {
 	rootCmd.Flags().StringP("config", "c", "config.json", "Configuration file")
-	rootCmd.Flags().IntP("index", "", 0, "Index of the request to send")
+	rootCmd.Flags().IntP("line", "l", 0, "Line number of the request to send")
+	rootCmd.Flags().IntP("number", "n", 0, "Number of request to send")
 	rootCmd.Flags().
 		IntP("max-timeout", "", 0, "Maximum time in seconds that you allow the whole operation to take")
 	rootCmd.Flags().BoolP("debug", "d", false, "Enable debug mode")
