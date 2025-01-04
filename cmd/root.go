@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"os"
 	"slices"
+	"strings"
 
 	"github.com/malev/hola/internals"
 	"github.com/malev/hola/logger"
@@ -85,7 +86,7 @@ to manage your secrets such as api-keys, api-secrets, etc.
 		if args[0] == "-" {
 			reader := bufio.NewReader(os.Stdin)
 			data, _ := io.ReadAll(reader)
-			input = string(data)
+			input = strings.TrimSpace(string(data))
 		}
 
 		app := internals.NewApp(dryRun, number, line, verbose, maxTimeout, output)

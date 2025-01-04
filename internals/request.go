@@ -86,6 +86,9 @@ func parseFirstLine(firstLine string) (string, string, string) {
 
 func ExtractRawRequest(content []string, from int) string {
 	var lines []string
+	if len(content) == 1 {
+		return content[0]
+	}
 	for i := from + 1; i < len(content); i++ {
 		if strings.Contains(content[i], "###") {
 			break
