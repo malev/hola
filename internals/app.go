@@ -13,7 +13,8 @@ import (
 
 type AppConfig struct {
 	DryRun     bool
-	Index      int
+	Number     int
+	Line       int
 	Verbose    bool
 	MaxTimeout int
 }
@@ -26,10 +27,11 @@ type App struct {
 	Printer   Printer
 }
 
-func NewApp(dryRun bool, index int, verbose bool, maxTimeout int, output string) *App {
+func NewApp(dryRun bool, number int, line int, verbose bool, maxTimeout int, output string) *App {
 	appConfig := &AppConfig{
 		DryRun:     dryRun,
-		Index:      index,
+		Number:     number,
+		Line:       number,
 		Verbose:    verbose,
 		MaxTimeout: maxTimeout,
 	}
