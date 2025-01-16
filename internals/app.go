@@ -124,7 +124,8 @@ func (app *App) printRequest(index int) {
 	}
 }
 
-func (app *App) Send(index int) error {
+func (app *App) Send(number int) error {
+	index := number - 1
 	request := app.Requests[index]
 
 	app.printRequest(index)

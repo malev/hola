@@ -66,6 +66,11 @@ to manage your secrets such as api-keys, api-secrets, etc.
 			os.Exit(1)
 		}
 
+		if number < 1 {
+			fmt.Println("Number should be bigger than 0")
+			os.Exit(1)
+		}
+
 		maxTimeout, err := cmd.Flags().GetInt("max-timeout")
 		if err != nil {
 			fmt.Println("Error parsing --max-timeout")
@@ -142,12 +147,11 @@ func Execute() {
 func init() {
 	rootCmd.Flags().StringP("config", "c", "config.json", "Configuration file")
 	rootCmd.Flags().IntP("line", "l", 0, "Line number of the request to send")
-	rootCmd.Flags().IntP("number", "n", 0, "Number of request to send")
+	rootCmd.Flags().IntP("number", "n", 1, "Number of request to send")
 	rootCmd.Flags().
 		IntP("max-timeout", "", 0, "Maximum time in seconds that you allow the whole operation to take")
 	rootCmd.Flags().BoolP("debug", "d", false, "Enable debug mode")
 	rootCmd.Flags().BoolP("dry-run", "", false, "Prevent sending the request")
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.Flags().BoolP("verbose", "v", false, "Set output to verbose")
 	rootCmd.Flags().StringP("output", "o", "text", "Change the output")
 	rootCmd.Flags().BoolP("version", "", false, "Print hola's version")

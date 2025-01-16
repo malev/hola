@@ -31,8 +31,8 @@ X-API-SECRET: {{env|X_API_SECRET}}
 * Export your secrets:
   * `export X_API_KEY=THIS-IS-MY-KEY`
   * `export X_API_SECRET=GIMME-ACCESS`
-* `hola users.http --index 0` to send the GET request
-* `hola users.http --index 1` to send the POST request (2nd request in the file)
+* `hola users.http --number 1` to send the GET request
+* `hola users.http --number 2` to send the POST request (2nd request in the file)
 
 ### Make use of configuration files
 
