@@ -30,7 +30,17 @@ func (p JSONPrinter) Meta(resp *http.Response, elapsed time.Duration) {
 }
 
 func (p JSONPrinter) Headers(headers http.Header) {
-	fmt.Println("{\"_type\": \"headers\", \"headers\":[]}")
+	hs := make(map[string]string)
+
+	for key, values := range headers {
+		if len(values) > 0 {
+			hs[key] = values[0]
+		}
+	}
+
+	output, _ := json.Marshal(hs)
+
+	fmt.Printf("{\"_type\": \"headers\", \"headers\":[%s]}\n", output)
 }
 
 func (p JSONPrinter) Body(body []byte) {
