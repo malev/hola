@@ -139,7 +139,7 @@ func (app *App) Send(number int) error {
 		return fmt.Errorf("Error creating request %v", err)
 	}
 
-	req.Header.Set("User-Agent", "hola/v0.0.4")
+	req.Header.Set("User-Agent", fmt.Sprintf("hola/%s", Version))
 	for _, header := range request.Headers {
 		req.Header.Set(header.Key, header.Value)
 	}

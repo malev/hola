@@ -14,8 +14,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const VERSION = "v0.0.4"
-
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "hola <requests.http>",
@@ -36,7 +34,7 @@ to manage your secrets such as api-keys, api-secrets, etc.
 		}
 		return nil
 	},
-	Version: VERSION,
+	Version: internals.Version,
 	Run: func(cmd *cobra.Command, args []string) {
 		configFile, err := cmd.Flags().GetString("config")
 		if err != nil {
