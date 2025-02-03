@@ -51,3 +51,11 @@ GET https://{{host}}/api/users
 
 * `hola users.http --config config.json`
 
+## Installation
+
+* Download the latest from [https://github.com/malev/hola/releases](https://github.com/malev/hola/releases)
+
+Or
+
+* Using flakes: `nix run github:malev/hola#hola`
+
