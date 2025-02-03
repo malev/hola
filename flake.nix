@@ -10,7 +10,7 @@
       in {
         packages.hola = pkgs.buildGoModule {
           pname = "hola";
-          version = "0.0.1";
+          version = "0.0.5";
           src = ./.;
           vendorHash = "sha256-hocnLCzWN8srQcO3BMNkd2lt0m54Qe7sqAhUxVZlz1k==";
           subPackages = [ "." ];
